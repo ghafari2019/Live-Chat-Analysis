@@ -1,4 +1,4 @@
-### **Verification Across Multiple Storage Accounts**
+# **Verification Across Multiple Storage Accounts**
 
 As part of the data availability check process, we will be reviewing two **Azure Storage Accounts** to ensure that the required data is accessible. Specifically, we will verify the presence of the data across two containers located in the following **Azure Storage Accounts**:
 
@@ -135,7 +135,41 @@ This analysis highlights that `webchat2` is the dominant channel with the most s
 
 ## Azure Storage account odpweursensadls004p
 
+### **Channel Interaction Volume in the Chatbot Dataset**
 
+This section provides insights into the **distribution of interaction volume** across different channels in the `cognigy_chatbot_chathistory` table from the **Standardized** container.
+
+![Description of Image](Images/pic4.png)
+
+#### **Key Findings:**
+- **Top Channel:** `webchat2` has the highest count of **181,479,236** records, making it the most active channel.
+- Other significant channels, such as **LH_EN_iframe_irreg_irreg** and **LH_DE_iframe_irreg_irreg**, also have considerable interaction volumes, reflecting their system usage.
+- This data offers valuable insights into **relative engagement across channels**, with `webchat2` clearly dominating chatbot interactions.
+
+
+### **Agent Interaction Counts Across Channels**
+
+This section provides an overview of **agent interactions** across different channels in the `cognigy_chatbot_chathistory` table from the **Standardized** container.
+
+![Description of Image](Images/pic5.png)
+
+#### **Key Findings:**
+- **Top Channel:** `webchat2` has the highest number of agent interactions, with **1,985,348** interactions.
+- **whatsapp** follows with **111,225** agent interactions.
+- Other channels, such as **LX_DE_iframe_irreg_irreg** and **LH_EN_iframe_noref_null**, show significantly fewer interactions, with **2** and **1** respectively.
+- This data highlights the most active channels where agents are engaged, with `webchat2` leading in terms of interaction volume.
+
+### **Session Count with High Interaction Across Channels**
+
+This section analyzes the number of unique sessions with more than **10 interactions** for key channels in the chatbot dataset.
+
+#### **Key Findings:**
+- **webchat2** has **2,633,768** sessions with more than 10 interactions, indicating a significantly higher volume of sessions compared to other channels.
+  
+![Description of Image](Images/pic6.png)
+  
+- **whatsapp** has **4,265** sessions with more than 10 interactions, much lower than `webchat2`.
+- This data highlights the difference in session activity between the two channels, with `webchat2` clearly having a much higher volume of sessions with substantial agent interactions.
 
 
 
