@@ -1,5 +1,9 @@
 ## SQL Query Analysis of Chatbot Interaction History
 
+
+![Description of Image](Images/pic1.png)
+
+
 ### Overview
 This section details an SQL query executed in a Spark job environment to analyze chatbot interaction history. The query retrieves and summarizes interaction counts grouped by communication channel.
 
