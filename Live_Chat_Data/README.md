@@ -1,5 +1,16 @@
+### **Verification Across Multiple Storage Accounts**
 
-## Azure Storage account oodpweursensadls004n | Containers: 
+As part of the data availability check process, we will be reviewing two **Azure Storage Accounts** to ensure that the required data is accessible. Specifically, we will verify the presence of the data across two containers located in the following **Azure Storage Accounts**:
+
+- **Azure Storage Account:** `odpweursensadls004n`
+- **Azure Storage Account:** `odpweursensadls004p`
+
+We will also verify the relevant data in this second storage account, ensuring **consistency and accessibility** for all datasets across the two accounts. 
+
+This **dual-check approach** across both storage accounts will help confirm the **availability and integrity** of the required datasets for further processing.
+ 
+
+## Azure Storage account odpweursensadls004n | Containers: 
 
 #### **1. Logs and Application Data**
 - **`$logs`** – Stores system logs, including access logs, query logs, and error reports.
@@ -121,6 +132,8 @@ Based on the results of the query, we analyzed the distribution of sessions with
 #### Summary:
 This analysis highlights that `webchat2` is the dominant channel with the most sessions involving higher interaction counts, while `whatsapp` sees significantly fewer such sessions. This insight is useful for focusing resources on the most engaging channels and understanding user behavior better across these platforms.
 
+
+## Azure Storage account odpweursensadls004p
 
 
 
