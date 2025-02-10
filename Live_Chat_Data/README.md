@@ -1,4 +1,4 @@
-# **Verification Across Multiple Storage Accounts**
+# **Verification Across two Storage Accounts**
 
 As part of the data availability check process, we will be reviewing two **Azure Storage Accounts** to ensure that the required data is accessible. Specifically, we will verify the presence of the data across two containers located in the following **Azure Storage Accounts**:
 
@@ -66,12 +66,6 @@ To check the availability of data in the specified locations, you can follow the
    - `lhg/customer/chatbot_handover_reports/chatbot_handover`
 4. Also, check the **standardized** container for the path:
    - `lhg/customer/cognigy_v4/chatbot_chathistory`
-
-
-
-
-
-
 
 
 ## SQL Query Analysis of Chatbot Interaction History
@@ -170,6 +164,74 @@ This section analyzes the number of unique sessions with more than **10 interact
   
 - **whatsapp** has **4,265** sessions with more than 10 interactions, much lower than `webchat2`.
 - This data highlights the difference in session activity between the two channels, with `webchat2` clearly having a much higher volume of sessions with substantial agent interactions.
+
+### **SQL Query: Extracting High-Interaction Sessions**
+
+This SQL query identifies chatbot sessions with a high interaction count and filters them based on specific conditions. The query performs the following steps:
+
+```sql
+WITH highest_interaction_sessions AS (
+  SELECT 
+    chathistory.session_id,
+    COUNT(CASE WHEN LOWER(chathistory.source) IN ('agent', 'notify') THEN 1 END) AS interaction_count
+  FROM odp_customer_service_analytics_p.standardized.cognigy_chatbot_chathistory chathistory
+  GROUP BY chathistory.session_id
+  HAVING interaction_count > 0
+),
+filtered_sessions AS (
+  SELECT DISTINCT session_id
+  FROM odp_customer_service_analytics_p.trusted.cognigy_chatbot_handover_history
+  WHERE interaction_count >= 50
+    AND LOWER(session_channel) != 'whatsapp'
+),
+selected_handover AS (
+  SELECT
+    session_id,
+    session_language,
+    session_start_time
+  FROM odp_customer_service_analytics_p.trusted.cognigy_chatbot_handover_history
+  WHERE interaction_count >= 50
+    AND LOWER(session_channel) != 'whatsapp'
+)
+SELECT 
+  chathistory.session_id,
+  chathistory.source, 
+  chathistory.channel,
+  handover.session_language,
+  chathistory.anon_input_text,
+  YEAR(handover.session_start_time) AS year,
+  chathistory.timestamp
+FROM odp_customer_service_analytics_p.standardized.cognigy_chatbot_chathistory chathistory
+JOIN selected_handover handover 
+  ON chathistory.session_id = handover.session_id
+WHERE chathistory.session_id IN (SELECT session_id FROM highest_interaction_sessions)
+  AND chathistory.session_id IN (SELECT session_id FROM filtered_sessions)
+ORDER BY chathistory.session_id, chathistory.timestamp ASC;
+```
+
+### **Query Explanation**
+1. **`highest_interaction_sessions`**: 
+   - Identifies chatbot sessions where the interaction count (involving agents or notifications) is greater than zero.
+2. **`filtered_sessions`**: 
+   - Selects sessions from the `cognigy_chatbot_handover_history` table where interaction count is **50 or more**, excluding WhatsApp interactions.
+3. **`selected_handover`**: 
+   - Retrieves relevant session details (language and start time) from the `cognigy_chatbot_handover_history` table based on the same filtering criteria.
+4. **Final Selection**:
+   - Joins `cognigy_chatbot_chathistory` with `selected_handover` on `session_id`.
+   - Filters for sessions that exist in both `highest_interaction_sessions` and `filtered_sessions`.
+   - Orders results by session ID and timestamp.
+
+### **Use Case**
+- Helps analyze **highly engaged chatbot interactions** across different channels.
+- Provides structured insights into **session language, timestamps, and anonymized user inputs**.
+- Useful for **tracking handover patterns** and improving chatbot-to-agent transitions.
+
+
+
+
+
+
+
 
 
 
